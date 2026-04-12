@@ -1,4 +1,4 @@
-public class Pasajero {
+class Pasajero extends Persona {
     private Nombre nomContacto;
     private String fonoContacto;
 
