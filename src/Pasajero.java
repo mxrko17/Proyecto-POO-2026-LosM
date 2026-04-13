@@ -1,6 +1,12 @@
+import java.awt.*;
+
 class Pasajero extends Persona {
     private Nombre nomContacto;
     private String fonoContacto;
+
+    public Pasajero(String fonoContacto){
+        this.fonoContacto=fonoContacto;
+    }
 
     public Nombre getNomContacto() {
         return nomContacto;

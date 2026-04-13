@@ -1,11 +1,14 @@
 class Persona {
-    private idPersona idPersona;
+    idPersona idPersona;
     private Nombre nombreCompleto;
     private String telefono;
 
     public Persona(idPersona idPersona, Nombre nombreCompleto) {
         this.idPersona = idPersona;
         this.nombreCompleto = nombreCompleto;
+    }
+
+    Persona() {
     }
 
     public idPersona getIdPersona() {
@@ -34,5 +37,6 @@ class Persona {
 
     public boolean equals(Object otro) {
 
+        return false;
     }
 }

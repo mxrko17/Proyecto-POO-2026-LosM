@@ -8,6 +8,7 @@ public class Nombre {
     }
 
     public void setTratamiento(Tratamiento tratamiento) {
+
         this.tratamiento = tratamiento;
     }
 
