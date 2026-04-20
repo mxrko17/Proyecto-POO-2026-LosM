@@ -1,4 +1,4 @@
-public class Persona {
+class Persona {
     private idPersona idPersona;
     private Nombre nombreCompleto;
     private String telefono;
