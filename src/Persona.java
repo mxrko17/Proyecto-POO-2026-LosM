@@ -1,14 +1,11 @@
 class Persona {
-    idPersona idPersona;
+    private idPersona idPersona;
     private Nombre nombreCompleto;
     private String telefono;
 
     public Persona(idPersona idPersona, Nombre nombreCompleto) {
         this.idPersona = idPersona;
         this.nombreCompleto = nombreCompleto;
-    }
-
-    Persona() {
     }
 
     public idPersona getIdPersona() {
@@ -34,9 +31,15 @@ class Persona {
     public String toString(){
         return "Pasajero: " + nombreCompleto + " id: " + idPersona + " telefono: " + telefono;
     }
-
     public boolean equals(Object otro) {
+        if (this == otro) {
+            return true;
+        }
+        if (otro == null || getClass() != otro.getClass()) {
+            return false;
+        }
+        Persona persona = (Persona) otro;
 
-        return false;
+        return idPersona.equals(persona.idPersona);
     }
 }
