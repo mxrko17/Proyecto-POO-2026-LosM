@@ -31,7 +31,6 @@ class Persona {
     public String toString(){
         return "Pasajero: " + nombreCompleto + " id: " + idPersona + " telefono: " + telefono;
     }
-
     public boolean equals(Object otro) {
         if (this == otro) {
             return true;
@@ -41,5 +40,6 @@ class Persona {
         }
         Persona persona = (Persona) otro;
 
+        return idPersona.equals(persona.idPersona);
     }
 }
