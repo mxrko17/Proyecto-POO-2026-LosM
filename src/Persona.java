@@ -33,6 +33,13 @@ class Persona {
     }
 
     public boolean equals(Object otro) {
+        if (this == otro) {
+            return true;
+        }
+        if (otro == null || getClass() != otro.getClass()) {
+            return false;
+        }
+        Persona persona = (Persona) otro;
 
     }
 }
