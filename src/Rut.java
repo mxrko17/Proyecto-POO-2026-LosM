@@ -27,15 +27,4 @@ public class Rut implements idPersona {
         return "Rut: " + numero + "-" +dv;
     }
 
-    @Override
-    public boolean equals(Object otro) {
-        if (this==otro) {
-            return true;
-        }
-        if(otro == null || getClass() != otro.getClass()) {
-            return false;
-        }
-        Rut rut = (Rut) otro;
-        return numero == rut.numero && dv == rut.dv;
-    }
 }
