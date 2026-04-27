@@ -1,3 +1,4 @@
+//Matias Baeza y Marco Basualto
 class Cliente extends Persona {
     private String email;
     private Venta[] ventas;
