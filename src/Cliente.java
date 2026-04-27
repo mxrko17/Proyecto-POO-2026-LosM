@@ -1,11 +1,11 @@
 class Cliente extends Persona {
     private String email;
-    private Nombre nom;
+    private Venta[] ventas;
 
-    public Cliente (idPersona id,Nombre nom,String email) {
-        this.idPersona = id;
+    public Cliente(idPersona id, Nombre nom, String email) {
+        super(id, nom);
         this.email = email;
-        this.nom=nom;
+        this.ventas = new Venta[0];
     }
 
     public String getEmail() {
@@ -14,5 +14,18 @@ class Cliente extends Persona {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void addVenta(Venta venta) {
+        Venta[] nuevo = new Venta[ventas.length + 1];
+        for (int i = 0; i < ventas.length; i++) {
+            nuevo[i] = ventas[i];
+        }
+        nuevo[ventas.length] = venta;
+        ventas = nuevo;
+    }
+
+    public Venta[] getVentas() {
+        return ventas;
     }
 }
