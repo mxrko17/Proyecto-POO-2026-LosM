@@ -1,3 +1,4 @@
+//Matias Baeza y Marco Basualto
 class Pasajero extends Persona {
     private Nombre nomContacto;
     private String fonoContacto;
