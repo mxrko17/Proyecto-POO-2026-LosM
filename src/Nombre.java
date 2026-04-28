@@ -39,7 +39,12 @@ public class Nombre {
 
     @Override
     public String toString() {
-        return super.toString();
+        String trat = (tratamiento != null) ? tratamiento.toString() : "";
+        String nom = (nombre != null) ? nombre : "";
+        String pat = (ApellidoPaterno != null) ? ApellidoPaterno : "";
+        String mat = (ApellidoMaterno != null) ? ApellidoMaterno : "";
+
+        return (trat + " " + nom + " " + pat + " " + mat).trim();
     }
 
     @Override
@@ -47,5 +52,3 @@ public class Nombre {
         return super.equals(otro);
     }
 }
-
-
