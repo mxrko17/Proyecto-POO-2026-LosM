@@ -1,3 +1,4 @@
+//Marco Basualto, Matias Cruz
 class Persona {
     private idPersona idPersona;
     private Nombre nombreCompleto;

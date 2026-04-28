@@ -1,3 +1,4 @@
+//Marco Basualto
 public class Pasaporte implements idPersona {
     private String numero;
     private String nacionalidad;
