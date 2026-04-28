@@ -1,5 +1,5 @@
 //Matias Baeza
-import java.util.UUID; // Importamos la clase mágica
+import java.util.UUID;
 
 class Pasaje {
     private long numero;

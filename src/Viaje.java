@@ -1,3 +1,4 @@
+//Matias Baeza
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -58,16 +59,21 @@ class Viaje {
     }
 
     public String[][] getListaPasajeros() {
-        String[][] lista = new String[pasajes.length][4];
+        String[][] lista = new String[pasajes.length][5];
 
         for (int i = 0; i < pasajes.length; i++) {
             Pasajero p = pasajes[i].getPasajero();
-            lista[i][0] = p.getIdPersona().toString(); // ID
-            lista[i][1] = p.getNombreCompleto().toString(); // Nombre completo
-            lista[i][2] = p.getNomContacto().toString(); // Nombre de contacto
-            lista[i][3] = p.getFonoContacto(); // Teléfono de contacto
-        }
+            lista[i][0] = String.valueOf(pasajes[i].getAsiento());
+            lista[i][1] = p.getIdPersona().toString();
+            lista[i][2] = p.getNombreCompleto().toString();
 
+            if (p.getNomContacto() != null) {
+                lista[i][3] = p.getNomContacto().toString();
+            } else {
+                lista[i][3] = "Sin contacto";
+            }
+            lista[i][4] = p.getFonoContacto();
+        }
         return lista;
     }
 
