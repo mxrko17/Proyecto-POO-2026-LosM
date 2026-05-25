@@ -1,16 +1,14 @@
-import java.util.ArrayList;
-
 public class Terminal {
     private String nombre;
     private Direccion direccion;
-    private ArrayList<Viaje> llegadas;
-    private ArrayList<Viaje> salidas;
+    private Viaje[] llegadas;
+    private Viaje[] salidas;
 
     public Terminal(String nombre, Direccion direccion) {
         this.nombre = nombre;
         this.direccion = direccion;
-        this.llegadas = new ArrayList<>();
-        this.salidas = new ArrayList<>();
+        this.llegadas = new Viaje[0];
+        this.salidas = new Viaje[0];
     }
 
     public String getNombre() { return nombre; }
@@ -18,22 +16,25 @@ public class Terminal {
     public void setDireccion(Direccion direccion) { this.direccion = direccion; }
 
     public void addLlegada(Viaje viaje) {
-        if (!llegadas.contains(viaje)) {
-            llegadas.add(viaje);
+        for (Viaje v : llegadas) {
+            if (v.equals(viaje)) return;
         }
+        Viaje[] nuevo = new Viaje[llegadas.length + 1];
+        for (int i = 0; i < llegadas.length; i++) nuevo[i] = llegadas[i];
+        nuevo[llegadas.length] = viaje;
+        llegadas = nuevo;
     }
 
     public void addSalida(Viaje viaje) {
-        if (!salidas.contains(viaje)){
-            salidas.add(viaje);
+        for (Viaje v : salidas) {
+            if (v.equals(viaje)) return;
         }
+        Viaje[] nuevo = new Viaje[salidas.length + 1];
+        for (int i = 0; i < salidas.length; i++) nuevo[i] = salidas[i];
+        nuevo[salidas.length] = viaje;
+        salidas = nuevo;
     }
 
-    public Viaje[] getLlegadas() {
-        return llegadas.toArray(new Viaje[0]);
-    }
-
-    public Viaje[] getSalidas() {
-        return salidas.toArray(new Viaje[0]);
-    }
+    public Viaje[] getLlegadas() { return llegadas; }
+    public Viaje[] getSalidas() { return salidas; }
 }
