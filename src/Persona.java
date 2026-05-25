@@ -1,4 +1,3 @@
-//Marco Basualto, Matias Cruz
 class Persona {
     private idPersona idPersona;
     private Nombre nombreCompleto;
@@ -30,7 +29,7 @@ class Persona {
     }
 
     public String toString(){
-        return "Pasajero: " + nombreCompleto + " id: " + idPersona + " telefono: " + telefono;
+        return nombreCompleto + " " + idPersona + " " + telefono;
     }
     public boolean equals(Object otro) {
         if (this == otro) {

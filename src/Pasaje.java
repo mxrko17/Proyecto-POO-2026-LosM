@@ -1,4 +1,3 @@
-//Matias Baeza
 import java.util.UUID;
 
 class Pasaje {

@@ -1,4 +1,3 @@
-//Marco Basualto
 public class Rut implements idPersona {
     private int numero;
     private char dv;
@@ -17,9 +16,13 @@ public class Rut implements idPersona {
     }
 
     public static Rut of(String rutConDv) {
-        String partes[] = rutConDv.split("-");
-        int num = Integer.parseInt(partes[0]);
-        char dv = partes[1].charAt(0);
+        String limpio = rutConDv.trim().toUpperCase();
+
+        String[] partes = limpio.split("-");
+
+        int num = Integer.parseInt(partes[0].trim());
+        char dv = partes[1].trim().charAt(0);
+
         return new Rut(num, dv);
     }
 

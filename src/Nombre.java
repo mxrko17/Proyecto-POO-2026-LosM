@@ -1,4 +1,3 @@
-//Matias Cruz
 public class Nombre {
 
     private Tratamiento tratamiento;
@@ -39,16 +38,18 @@ public class Nombre {
 
     @Override
     public String toString() {
-        String trat = (tratamiento != null) ? tratamiento.toString() : "";
-        String nom = (nombre != null) ? nombre : "";
-        String pat = (ApellidoPaterno != null) ? ApellidoPaterno : "";
-        String mat = (ApellidoMaterno != null) ? ApellidoMaterno : "";
-
-        return (trat + " " + nom + " " + pat + " " + mat).trim();
+        return tratamiento + " " + nombre + " " + ApellidoPaterno + " " + ApellidoMaterno;
     }
 
     @Override
     public boolean equals(Object otro) {
-        return super.equals(otro);
+        if (this == otro) return true;
+        if (otro == null || getClass() != otro.getClass()) return false;
+
+        Nombre n = (Nombre) otro;
+
+        return tratamiento == n.tratamiento && nombre.equals(n.nombre) && ApellidoPaterno.equals(n.ApellidoPaterno) && ApellidoMaterno.equals(n.ApellidoMaterno);
     }
 }
+
+
