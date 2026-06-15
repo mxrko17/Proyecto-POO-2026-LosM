@@ -1,11 +1,14 @@
+package modelo;
+
 import java.util.Date;
+import java.util.ArrayList;
 
 public class Venta {
     private String idDocumento;
     private TipoDocumento tipo;
     private Date fecha;
     private Cliente cliente;
-    private Pasaje[] pasajes;
+    private ArrayList<Pasaje> pasajes;
     private Pago pago;
 
     public Venta(String idDoc, TipoDocumento tipo, Date fec, Cliente cli) {
@@ -13,7 +16,7 @@ public class Venta {
         this.tipo = tipo;
         this.fecha = fec;
         this.cliente = cli;
-        this.pasajes = new Pasaje[0];
+        this.pasajes = new ArrayList<>();
 
         if (cli != null) {
             cli.addVenta(this);
@@ -24,7 +27,7 @@ public class Venta {
     public TipoDocumento getTipo() { return tipo; }
     public Date getFecha() { return fecha; }
     public Cliente getCliente() { return cliente; }
-    public Pasaje[] getPasajes() { return pasajes; }
+    public Pasaje[] getPasajes() { return pasajes.toArray(new Pasaje[0]); }
 
     public int getMonto() {
         int total = 0;
@@ -39,10 +42,7 @@ public class Venta {
             if (p.getAsiento() == asiento && p.getViaje().equals(viaje)) return;
         }
         Pasaje nuevoPasaje = new Pasaje(asiento, viaje, pasajero, this);
-        Pasaje[] nuevoArr = new Pasaje[pasajes.length + 1];
-        for (int i = 0; i < pasajes.length; i++) nuevoArr[i] = pasajes[i];
-        nuevoArr[pasajes.length] = nuevoPasaje;
-        this.pasajes = nuevoArr;
+        this.pasajes.add(nuevoPasaje);
     }
 
     public int getMontoPagado() {

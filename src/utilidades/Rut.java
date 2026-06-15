@@ -1,3 +1,5 @@
+package utilidades;
+
 public class Rut implements idPersona {
     private int numero;
     private char dv;
@@ -28,15 +30,15 @@ public class Rut implements idPersona {
 
     @Override
     public String toString() {
-        return "Rut: " + numero + "-" +dv;
+        return numero + "-" + dv;
     }
 
     @Override
     public boolean equals(Object otro) {
-        if (this==otro) {
+        if (this == otro) {
             return true;
         }
-        if(otro == null || getClass() != otro.getClass()) {
+        if (otro == null || getClass() != otro.getClass()) {
             return false;
         }
         Rut rut = (Rut) otro;

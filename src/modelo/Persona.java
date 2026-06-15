@@ -1,3 +1,8 @@
+package modelo;
+
+import utilidades.Nombre;
+import utilidades.idPersona;
+
 class Persona {
     private idPersona idPersona;
     private Nombre nombreCompleto;

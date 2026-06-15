@@ -1,7 +1,10 @@
+package modelo;
+
 import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.ArrayList;
 
 public class Viaje {
     private Date fecha;
@@ -13,7 +16,7 @@ public class Viaje {
     private Conductor[] conductores;
     private Terminal terminalSalida;
     private Terminal terminalLlegada;
-    private Pasaje[] pasajes;
+    private ArrayList<Pasaje> pasajes;
 
     public Viaje(Date fecha, Time hora, int precio, int dur, Bus bus, Auxiliar aux, Conductor[] conds, Terminal sale, Terminal llega) {
         this.fecha = fecha;
@@ -25,7 +28,7 @@ public class Viaje {
         this.conductores = conds;
         this.terminalSalida = sale;
         this.terminalLlegada = llega;
-        this.pasajes = new Pasaje[0];
+        this.pasajes = new ArrayList<>();
 
         if (bus != null) bus.addViaje(this);
         if (sale != null) sale.addSalida(this);
@@ -50,15 +53,13 @@ public class Viaje {
     }
 
     public void addPasaje(Pasaje pasaje) {
-        for (Pasaje p : pasajes) if (p.equals(pasaje)) return;
-        Pasaje[] nuevo = new Pasaje[pasajes.length + 1];
-        for (int i = 0; i < pasajes.length; i++) nuevo[i] = pasajes[i];
-        nuevo[pasajes.length] = pasaje;
-        pasajes = nuevo;
+        if (!pasajes.contains(pasaje)) {
+            pasajes.add(pasaje);
+        }
     }
 
     public boolean existeDisponibilidad(int nroAsientos) {
-        return (bus.getNroAsientos() - pasajes.length) >= nroAsientos;
+        return (bus.getNroAsientos() - pasajes.size()) >= nroAsientos;
     }
 
     public String[] getAsientos() {
@@ -71,9 +72,9 @@ public class Viaje {
     public Bus getBus() { return bus; }
 
     public String[][] getListaPasajeros() {
-        String[][] lista = new String[pasajes.length][4];
-        for (int i = 0; i < pasajes.length; i++) {
-            Pasajero p = pasajes[i].getPasajero();
+        String[][] lista = new String[pasajes.size()][4];
+        for (int i = 0; i < pasajes.size(); i++) {
+            Pasajero p = pasajes.get(i).getPasajero();
             lista[i][0] = p.getIdPersona().toString();
             lista[i][1] = p.getNombreCompleto().toString();
             lista[i][2] = p.getNomContacto() != null ? p.getNomContacto().toString() : "";
@@ -83,24 +84,17 @@ public class Viaje {
     }
 
     public int getNroAsientosDisponibles() {
-        return bus.getNroAsientos() - pasajes.length;
+        return bus.getNroAsientos() - pasajes.size();
     }
 
     public Venta[] getVentas() {
-        Venta[] ventasViaje = new Venta[0];
+        ArrayList<Venta> ventasViaje = new ArrayList<>();
         for (Pasaje p : pasajes) {
-            boolean existe = false;
-            for (Venta v : ventasViaje) {
-                if (v.equals(p.getVenta())) { existe = true; break; }
-            }
-            if (!existe) {
-                Venta[] nuevo = new Venta[ventasViaje.length + 1];
-                for (int i = 0; i < ventasViaje.length; i++) nuevo[i] = ventasViaje[i];
-                nuevo[ventasViaje.length] = p.getVenta();
-                ventasViaje = nuevo;
+            if (!ventasViaje.contains(p.getVenta())) {
+                ventasViaje.add(p.getVenta());
             }
         }
-        return ventasViaje;
+        return ventasViaje.toArray(new Venta[0]);
     }
 
     public Tripulante[] getTripulantes() {

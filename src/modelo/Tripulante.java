@@ -1,4 +1,10 @@
-public class Tripulante extends Persona{
+package modelo;
+
+import utilidades.Direccion;
+import utilidades.Nombre;
+import utilidades.idPersona;
+
+public class Tripulante extends Persona {
     private Direccion direccion;
     private int nroViajes;
 

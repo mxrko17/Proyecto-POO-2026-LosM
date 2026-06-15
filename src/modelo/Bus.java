@@ -1,16 +1,20 @@
+package modelo;
+
+import java.util.ArrayList;
+
 public class Bus {
     private String patente;
     private String marca;
     private String modelo;
     private int nroAsientos;
     private Empresa empresa;
-    private Viaje[] viajes;
+    private ArrayList<Viaje> viajes;
 
     public Bus(String patente, int nroAsientos, Empresa emp) {
         this.patente = patente;
         this.nroAsientos = nroAsientos;
         this.empresa = emp;
-        this.viajes = new Viaje[0];
+        this.viajes = new ArrayList<>();
 
         if (emp != null) {
             emp.addBus(this);
@@ -26,12 +30,10 @@ public class Bus {
     public Empresa getEmpresa() { return empresa; }
 
     public void addViaje(Viaje viaje) {
-        for (Viaje v : viajes) if (v.equals(viaje)) return;
-        Viaje[] nuevo = new Viaje[viajes.length + 1];
-        for (int i = 0; i < viajes.length; i++) nuevo[i] = viajes[i];
-        nuevo[viajes.length] = viaje;
-        viajes = nuevo;
+        if (!viajes.contains(viaje)) {
+            viajes.add(viaje);
+        }
     }
 
-    public Viaje[] getViajes() { return viajes; }
+    public Viaje[] getViajes() { return viajes.toArray(new Viaje[0]); }
 }

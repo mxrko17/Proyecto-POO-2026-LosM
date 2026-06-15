@@ -1,4 +1,9 @@
-class Pasajero extends Persona {
+package modelo;
+
+import utilidades.Nombre;
+import utilidades.idPersona;
+
+public class Pasajero extends Persona {
     private Nombre nomContacto;
     private String fonoContacto;
 

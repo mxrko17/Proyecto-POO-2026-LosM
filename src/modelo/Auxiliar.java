@@ -1,6 +1,12 @@
-public class Conductor extends Tripulante {
+package modelo;
 
-    public Conductor(idPersona id, Nombre nom, Direccion dir) {
+import utilidades.Direccion;
+import utilidades.Nombre;
+import utilidades.idPersona;
+
+public class Auxiliar extends Tripulante {
+
+    public Auxiliar(idPersona id, Nombre nom, Direccion dir) {
         super(id, nom, dir);
     }
 
