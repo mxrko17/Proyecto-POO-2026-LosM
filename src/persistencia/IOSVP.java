@@ -59,27 +59,26 @@ public class IOSVP implements java.io.Serializable {
 
                 switch (seccionActual) {
                     case 0: // --- Clientes y/o Pasajeros ---
-                        String[] primeraCelda = datos[0].split("[: ]");
-                        String tipo = primeraCelda[0].trim();
-                        // CORRECCIÓN: Limpiamos los puntos antes de pasarlo a Rut.of
-                        Rut rut = Rut.of(primeraCelda[1].trim().replace(".", ""));
+                        String tipo = datos[0].trim();
+                        Rut rut = Rut.of(datos[1].trim().replace(".", ""));
 
                         Nombre nom = new Nombre();
-                        nom.setTratamiento(Tratamiento.valueOf(datos[1]));
-                        nom.setNombres(datos[2]);
-                        nom.setApellidoPaterno(datos[3]);
-                        nom.setApellidoMaterno(datos[4]);
-                        String fono = datos[5];
+                        nom.setTratamiento(Tratamiento.valueOf(datos[2]));
+                        nom.setNombres(datos[3]);
+                        nom.setApellidoPaterno(datos[4]);
+                        nom.setApellidoMaterno(datos[5]);
+                        String fono = datos[6];
 
                         if (tipo.equals("C") || tipo.equals("CP")) {
-                            String email = datos[6];
+                            String email = datos[7];
                             Cliente c = new Cliente(rut, nom, email);
                             c.setTelefono(fono);
                             objetosCreados.add(c);
                         }
 
                         if (tipo.equals("P") || tipo.equals("CP")) {
-                            int offset = tipo.equals("CP") ? 7 : 6;
+                            int offset = tipo.equals("CP") ? 8 : 7;
+
                             Nombre nomContacto = new Nombre();
                             nomContacto.setTratamiento(Tratamiento.valueOf(datos[offset]));
                             nomContacto.setNombres(datos[offset + 1]);
@@ -101,24 +100,30 @@ public class IOSVP implements java.io.Serializable {
                         break;
 
                     case 2: // --- Tripulantes ---
-                        String[] celdaTrip = datos[0].split("[: ]");
-                        String tipoTrip = celdaTrip[0].trim();
-                        // CORRECCIÓN: Limpiamos los puntos
-                        Rut rutTrip = Rut.of(celdaTrip[1].trim().replace(".", ""));
+                        String tipoTrip = datos[0].trim();
+                        Rut rutTrip = Rut.of(datos[1].trim().replace(".", ""));
 
                         Nombre nomTrip = new Nombre();
-                        nomTrip.setTratamiento(Tratamiento.valueOf(datos[1]));
-                        nomTrip.setNombres(datos[2]);
-                        nomTrip.setApellidoPaterno(datos[3]);
-                        nomTrip.setApellidoMaterno(datos[4]);
+                        nomTrip.setTratamiento(Tratamiento.valueOf(datos[2]));
+                        nomTrip.setNombres(datos[3]);
+                        nomTrip.setApellidoPaterno(datos[4]);
+                        nomTrip.setApellidoMaterno(datos[5]);
 
-                        Direccion dirTrip = new Direccion(datos[5], Integer.parseInt(datos[6]), datos[7]);
-                        // CORRECCIÓN: Limpiamos los puntos
-                        Rut rutEmpresaTrip = Rut.of(datos[8].replace(".", ""));
+                        Direccion dirTrip = new Direccion(
+                                datos[6],
+                                Integer.parseInt(datos[7]),
+                                datos[8]
+                        );
+
+                        Rut rutEmpresaTrip = Rut.of(datos[9].replace(".", ""));
 
                         findEmpresa(empresasTemp, e -> e.getRut().equals(rutEmpresaTrip)).ifPresent(e -> {
-                            if (tipoTrip.equals("A")) e.addAuxiliar(rutTrip, nomTrip, dirTrip);
-                            if (tipoTrip.equals("C")) e.addConductor(rutTrip, nomTrip, dirTrip);
+                            if (tipoTrip.equals("A")) {
+                                e.addAuxiliar(rutTrip, nomTrip, dirTrip);
+                            }
+                            if (tipoTrip.equals("C")) {
+                                e.addConductor(rutTrip, nomTrip, dirTrip);
+                            }
                         });
                         break;
 
