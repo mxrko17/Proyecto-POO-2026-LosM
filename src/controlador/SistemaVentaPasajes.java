@@ -36,7 +36,7 @@ public class SistemaVentaPasajes implements java.io.Serializable {
     public void generatePasajesVenta(String idDoc, TipoDocumento tipo) {
         Optional<Venta> v = findVenta(idDoc, tipo);
         if (!v.isPresent()) {
-            throw new SVPException("No existe una venta con los datos indicados");
+            throw new SVPException("no existe una venta con los datos indicados");
         }
         String nombreArchivo = idDoc + tipo.toString().toLowerCase() + ".txt";
         IOSVP.getInstance().savePasajesDeVenta(v.get().getPasajes(), nombreArchivo);
