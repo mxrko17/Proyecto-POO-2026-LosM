@@ -115,7 +115,7 @@ public class ControladorEmpresas implements java.io.Serializable {
     public String[][] listLlegadasSalidasTerminal(String nombre, Date fecha) {
         Optional<Terminal> t = findTerminal(nombre);
         if (!t.isPresent()) {
-            throw new SVPException("No existe terminal con el nombre indicado");
+            throw new SVPException("no existe terminal con el nombre indicado");
         }
 
         ArrayList<String[]> resultado = new ArrayList<>();
