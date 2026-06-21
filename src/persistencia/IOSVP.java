@@ -45,142 +45,140 @@ public class IOSVP implements java.io.Serializable {
 
             while ((linea = br.readLine()) != null) {
                 linea = linea.trim();
-                if (linea.isEmpty()) continue;
 
-                if (linea.equals("+")) {
-                    seccionActual++;
-                    continue;
-                }
+                if (!linea.isEmpty()) {
 
-                String[] datos = linea.split(";");
-                for (int i = 0; i < datos.length; i++) {
-                    datos[i] = datos[i].trim();
-                }
-
-                switch (seccionActual) {
-                    case 0: // --- Clientes y/o Pasajeros ---
-                        String tipo = datos[0].trim();
-                        Rut rut = Rut.of(datos[1].trim().replace(".", ""));
-
-                        Nombre nom = new Nombre();
-                        nom.setTratamiento(Tratamiento.valueOf(datos[2]));
-                        nom.setNombres(datos[3]);
-                        nom.setApellidoPaterno(datos[4]);
-                        nom.setApellidoMaterno(datos[5]);
-                        String fono = datos[6];
-
-                        if (tipo.equals("C") || tipo.equals("CP")) {
-                            String email = datos[7];
-                            Cliente c = new Cliente(rut, nom, email);
-                            c.setTelefono(fono);
-                            objetosCreados.add(c);
+                    if (linea.equals("+")) {
+                        seccionActual++;
+                    } else {
+                        String[] datos = linea.split(";");
+                        for (int i = 0; i < datos.length; i++) {
+                            datos[i] = datos[i].trim();
                         }
 
-                        if (tipo.equals("P") || tipo.equals("CP")) {
-                            int offset = tipo.equals("CP") ? 8 : 7;
+                        switch (seccionActual) {
+                            case 0:
+                                String tipo = datos[0].trim();
+                                Rut rut = Rut.of(datos[1].trim().replace(".", ""));
 
-                            Nombre nomContacto = new Nombre();
-                            nomContacto.setTratamiento(Tratamiento.valueOf(datos[offset]));
-                            nomContacto.setNombres(datos[offset + 1]);
-                            nomContacto.setApellidoPaterno(datos[offset + 2]);
-                            nomContacto.setApellidoMaterno(datos[offset + 3]);
-                            String fonoContacto = datos[offset + 4];
+                                Nombre nom = new Nombre();
+                                nom.setTratamiento(Tratamiento.valueOf(datos[2]));
+                                nom.setNombres(datos[3]);
+                                nom.setApellidoPaterno(datos[4]);
+                                nom.setApellidoMaterno(datos[5]);
+                                String fono = datos[6];
 
-                            Pasajero p = new Pasajero(rut, nom, fono, nomContacto, fonoContacto);
-                            objetosCreados.add(p);
+                                if (tipo.equals("C") || tipo.equals("CP")) {
+                                    String email = datos[7];
+                                    Cliente c = new Cliente(rut, nom, email);
+                                    c.setTelefono(fono);
+                                    objetosCreados.add(c);
+                                }
+
+                                if (tipo.equals("P") || tipo.equals("CP")) {
+                                    int offset = tipo.equals("CP") ? 8 : 7;
+
+                                    Nombre nomContacto = new Nombre();
+                                    nomContacto.setTratamiento(Tratamiento.valueOf(datos[offset]));
+                                    nomContacto.setNombres(datos[offset + 1]);
+                                    nomContacto.setApellidoPaterno(datos[offset + 2]);
+                                    nomContacto.setApellidoMaterno(datos[offset + 3]);
+                                    String fonoContacto = datos[offset + 4];
+
+                                    Pasajero p = new Pasajero(rut, nom, fono, nomContacto, fonoContacto);
+                                    objetosCreados.add(p);
+                                }
+                                break;
+
+                            case 1:
+                                Empresa emp = new Empresa(Rut.of(datos[0].replace(".", "")), datos[1]);
+                                emp.setUrl(datos[2]);
+                                empresasTemp.add(emp);
+                                objetosCreados.add(emp);
+                                break;
+
+                            case 2:
+                                String tipoTrip = datos[0].trim();
+                                Rut rutTrip = Rut.of(datos[1].trim().replace(".", ""));
+
+                                Nombre nomTrip = new Nombre();
+                                nomTrip.setTratamiento(Tratamiento.valueOf(datos[2]));
+                                nomTrip.setNombres(datos[3]);
+                                nomTrip.setApellidoPaterno(datos[4]);
+                                nomTrip.setApellidoMaterno(datos[5]);
+
+                                Direccion dirTrip = new Direccion(
+                                        datos[6],
+                                        Integer.parseInt(datos[7]),
+                                        datos[8]
+                                );
+
+                                Rut rutEmpresaTrip = Rut.of(datos[9].replace(".", ""));
+
+                                findEmpresa(empresasTemp, e -> e.getRut().equals(rutEmpresaTrip)).ifPresent(e -> {
+                                    if (tipoTrip.equals("A")) {
+                                        e.addAuxiliar(rutTrip, nomTrip, dirTrip);
+                                    }
+                                    if (tipoTrip.equals("C")) {
+                                        e.addConductor(rutTrip, nomTrip, dirTrip);
+                                    }
+                                });
+                                break;
+
+                            case 3:
+                                Terminal term = new Terminal(datos[0], new Direccion(datos[1], Integer.parseInt(datos[2]), datos[3]));
+                                terminalesTemp.add(term);
+                                objetosCreados.add(term);
+                                break;
+
+                            case 4:
+                                Rut rutEmpBus = Rut.of(datos[4].replace(".", ""));
+                                findEmpresa(empresasTemp, e -> e.getRut().equals(rutEmpBus)).ifPresent(e -> {
+                                    Bus bus = new Bus(datos[0], Integer.parseInt(datos[3]), e);
+                                    bus.setMarca(datos[1]);
+                                    bus.setModelo(datos[2]);
+                                    busesTemp.add(bus);
+                                    objetosCreados.add(bus);
+                                });
+                                break;
+
+                            case 5:
+                                SimpleDateFormat sdfFec = new SimpleDateFormat("dd-MM-yyyy");
+                                SimpleDateFormat sdfHor = new SimpleDateFormat("HH:mm");
+
+                                Date fecha = sdfFec.parse(datos[0]);
+                                Time hora = new Time(sdfHor.parse(datos[1]).getTime());
+                                int precio = Integer.parseInt(datos[2]);
+                                int duracion = Integer.parseInt(datos[3]);
+                                String patente = datos[4];
+                                Rut rutAux = Rut.of(datos[5].replace(".", ""));
+                                String[] rutsConductores = datos[6].split(" ");
+
+                                Optional<Bus> busViaje = findBus(busesTemp, b -> b.getPatente().equalsIgnoreCase(patente));
+                                Optional<Terminal> termSalida = findTerminal(terminalesTemp, t -> t.getNombre().equalsIgnoreCase(datos[7]));
+                                Optional<Terminal> termLlega = findTerminal(terminalesTemp, t -> t.getNombre().equalsIgnoreCase(datos[8]));
+
+                                if (busViaje.isPresent() && termSalida.isPresent() && termLlega.isPresent()) {
+                                    Empresa empresaViaje = busViaje.get().getEmpresa();
+                                    Optional<Tripulante> aux = findTripulante(empresaViaje, rutAux, "Auxiliar");
+
+                                    List<Conductor> condsLista = new ArrayList<>();
+                                    for (String rc : rutsConductores) {
+
+                                        findTripulante(empresaViaje, Rut.of(rc.replace(".", "")), "Conductor")
+                                                .ifPresent(c -> condsLista.add((Conductor) c));
+                                    }
+
+                                    if (aux.isPresent() && !condsLista.isEmpty()) {
+                                        Viaje v = new Viaje(fecha, hora, precio, duracion, busViaje.get(),
+                                                (Auxiliar) aux.get(), condsLista.toArray(new Conductor[0]),
+                                                termSalida.get(), termLlega.get());
+                                        objetosCreados.add(v);
+                                    }
+                                }
+                                break;
                         }
-                        break;
-
-                    case 1: // --- Empresas ---
-                        // CORRECCIÓN: Limpiamos los puntos
-                        Empresa emp = new Empresa(Rut.of(datos[0].replace(".", "")), datos[1]);
-                        emp.setUrl(datos[2]);
-                        empresasTemp.add(emp);
-                        objetosCreados.add(emp);
-                        break;
-
-                    case 2: // --- Tripulantes ---
-                        String tipoTrip = datos[0].trim();
-                        Rut rutTrip = Rut.of(datos[1].trim().replace(".", ""));
-
-                        Nombre nomTrip = new Nombre();
-                        nomTrip.setTratamiento(Tratamiento.valueOf(datos[2]));
-                        nomTrip.setNombres(datos[3]);
-                        nomTrip.setApellidoPaterno(datos[4]);
-                        nomTrip.setApellidoMaterno(datos[5]);
-
-                        Direccion dirTrip = new Direccion(
-                                datos[6],
-                                Integer.parseInt(datos[7]),
-                                datos[8]
-                        );
-
-                        Rut rutEmpresaTrip = Rut.of(datos[9].replace(".", ""));
-
-                        findEmpresa(empresasTemp, e -> e.getRut().equals(rutEmpresaTrip)).ifPresent(e -> {
-                            if (tipoTrip.equals("A")) {
-                                e.addAuxiliar(rutTrip, nomTrip, dirTrip);
-                            }
-                            if (tipoTrip.equals("C")) {
-                                e.addConductor(rutTrip, nomTrip, dirTrip);
-                            }
-                        });
-                        break;
-
-                    case 3: // --- Terminales ---
-                        Terminal term = new Terminal(datos[0], new Direccion(datos[1], Integer.parseInt(datos[2]), datos[3]));
-                        terminalesTemp.add(term);
-                        objetosCreados.add(term);
-                        break;
-
-                    case 4: // --- Buses ---
-                        // CORRECCIÓN: Limpiamos los puntos
-                        Rut rutEmpBus = Rut.of(datos[4].replace(".", ""));
-                        findEmpresa(empresasTemp, e -> e.getRut().equals(rutEmpBus)).ifPresent(e -> {
-                            Bus bus = new Bus(datos[0], Integer.parseInt(datos[3]), e);
-                            bus.setMarca(datos[1]);
-                            bus.setModelo(datos[2]);
-                            busesTemp.add(bus);
-                            objetosCreados.add(bus);
-                        });
-                        break;
-
-                    case 5: // --- Viajes ---
-                        SimpleDateFormat sdfFec = new SimpleDateFormat("dd-MM-yyyy");
-                        SimpleDateFormat sdfHor = new SimpleDateFormat("HH:mm");
-
-                        Date fecha = sdfFec.parse(datos[0]);
-                        Time hora = new Time(sdfHor.parse(datos[1]).getTime());
-                        int precio = Integer.parseInt(datos[2]);
-                        int duracion = Integer.parseInt(datos[3]);
-                        String patente = datos[4];
-                        // CORRECCIÓN: Limpiamos los puntos
-                        Rut rutAux = Rut.of(datos[5].replace(".", ""));
-                        String[] rutsConductores = datos[6].split(" ");
-
-                        Optional<Bus> busViaje = findBus(busesTemp, b -> b.getPatente().equalsIgnoreCase(patente));
-                        Optional<Terminal> termSalida = findTerminal(terminalesTemp, t -> t.getNombre().equalsIgnoreCase(datos[7]));
-                        Optional<Terminal> termLlega = findTerminal(terminalesTemp, t -> t.getNombre().equalsIgnoreCase(datos[8]));
-
-                        if (busViaje.isPresent() && termSalida.isPresent() && termLlega.isPresent()) {
-                            Empresa empresaViaje = busViaje.get().getEmpresa();
-                            Optional<Tripulante> aux = findTripulante(empresaViaje, rutAux, "Auxiliar");
-
-                            List<Conductor> condsLista = new ArrayList<>();
-                            for (String rc : rutsConductores) {
-                                // CORRECCIÓN: Limpiamos los puntos también en el bucle de los choferes
-                                findTripulante(empresaViaje, Rut.of(rc.replace(".", "")), "Conductor")
-                                        .ifPresent(c -> condsLista.add((Conductor) c));
-                            }
-
-                            if (aux.isPresent() && !condsLista.isEmpty()) {
-                                Viaje v = new Viaje(fecha, hora, precio, duracion, busViaje.get(),
-                                        (Auxiliar) aux.get(), condsLista.toArray(new Conductor[0]),
-                                        termSalida.get(), termLlega.get());
-                                objetosCreados.add(v);
-                            }
-                        }
-                        break;
+                    }
                 }
             }
         } catch (Exception e) {
